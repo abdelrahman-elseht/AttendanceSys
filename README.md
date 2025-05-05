@@ -1,7 +1,3 @@
-I understand you’re looking for the raw Markdown content for the `README.md` file to copy directly into your VS Code editor. I previously provided this content, but I’ll present it again here in its raw form, without any additional tags or formatting, so you can easily copy and paste it into your `README.md` file in VS Code. This Markdown content documents your Face Recognition Attendance System project, as per the structure you provided.
-
----
-
 # Face Recognition Attendance System
 
 This project is a web application that uses facial recognition to manage attendance. Users can register and log in using their face via a webcam, and administrators can view a list of registered users. The application is built with FastAPI, Python, and face recognition libraries like `dlib` and `face_recognition`.
