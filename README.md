@@ -50,13 +50,17 @@ This project is a web application that uses facial recognition to manage attenda
    Ensure `requirements.txt` includes:
 
    ```
-   fastapi
-   uvicorn
-   jinja2
-   sqlalchemy
-   pillow
-   numpy
-   face_recognition
+    face_recognition == 1.3.0
+    opencv-python == 4.8.0.76
+    cmake == 3.26.0
+    numpy == 1.24.3
+    fastapi == 0.104.1
+    sqlalchemy == 2.0.36
+    pydantic == 2.5.3
+    python-multipart == 0.0.19
+    uvicorn == 0.24.0
+    jinja2 == 3.1.2
+    python-multipart == 0.0.19
    ```
 
 4. **Create Necessary Directories**: The `uploads/` directory should already exist (as per the structure). If not:
@@ -99,36 +103,3 @@ This project is a web application that uses facial recognition to manage attenda
 - `GET /users`: Displays a list of registered users.
 - `GET /success`: Shows a success message after login/registration.
 
-## Contributing
-
-Contributions are welcome! Please fork the repository, create a new branch, and submit a pull request with your changes.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details (to be added).
-
----
-
-### How to Use in VS Code
-1. **Open VS Code**:
-   - Navigate to your project directory (e.g., `Attendance-System`).
-   - Open the existing `README.md` file or create a new one if needed (`File > New File > README.md`).
-
-2. **Copy and Paste**:
-   - Copy the entire Markdown content above (from `# Face Recognition Attendance System` to the end).
-   - Paste it into your `README.md` file in VS Code.
-
-3. **Save the File**:
-   - Save the file (`Ctrl + S` or `Cmd + S` on Mac).
-
-4. **Preview (Optional)**:
-   - Use VS Code’s Markdown preview (`Ctrl + Shift + V` or `Cmd + Shift + V`) to view the formatted content.
-
-5. **Commit (If Using Git)**:
-   - Stage and commit the file:
-     ```bash
-     git add README.md
-     git commit -m "Update README with detailed project documentation"
-     ```
-
-Let me know if you need any adjustments to the content!
