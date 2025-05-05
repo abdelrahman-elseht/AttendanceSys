@@ -39,6 +39,11 @@ This project is a web application that uses facial recognition to manage attenda
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
+   **or using conda**
+   ```bash
+   conda create -n Attendance-System python=3.10
+   conda activate Attendance-System
+   ```
 
 3. **Install Dependencies**: Install the required packages, including the precompiled `dlib` wheel.
 
