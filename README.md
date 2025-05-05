@@ -4,7 +4,6 @@ This project is a web application that uses facial recognition to manage attenda
 
 ## Directory Structure
 
-- `__pycache__`: Auto-generated directory containing compiled Python bytecode files.
 - `app/`: Contains backend logic and utilities (e.g., `database.py`, `models.py`, `face_utils.py`, `auth.py`, `schemas.py`).
 - `static/`: Stores static files like `style.css` for frontend styling.
 - `templates/`: Contains Jinja2 templates (`index.html`, `login.html`, `register.html`, `success.html`, `users.html`, `base.html`) for rendering HTML pages.
