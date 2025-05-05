@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="form-section">
+    <div class="form-content">
+        <h2>Login with Face</h2>
+        <form id="login-form" action="/login" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label>Capture from Webcam:</label>
+            <div class="video-capture">
+                <video id="video" autoplay muted playsinline></video>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <img id="preview" style="display:none;" alt="Captured Image">
+                <div class="button-row">
+                    <button type="button" id="snap">Capture Face</button>
+                    <button type="button" id="retake" style="display:none;">Try Again</button>
+                </div>
+            </div>
+            <textarea name="captured_image" id="captured_image" rows="3" style="display:none;"></textarea>
+            <input type="submit" value="Login" id="submit-btn" style="display:none;">
+        </form>
+        <div id="status-message-area"></div>
+    </div>
+</section>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const preview = document.getElementById('preview');
+    const snapBtn = document.getElementById('snap');
+    const retakeBtn = document.getElementById('retake');
+    const capturedField = document.getElementById('captured_image');
+    const submitBtn = document.getElementById('submit-btn');
+    const statusArea = document.getElementById('status-message-area');
+    const loginForm = document.getElementById('login-form');
+    const ctx = canvas.getContext('2d');
+    let stream;
+
+    async function setupCamera() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                snapBtn.disabled = false;
+            };
+        } catch (err) {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.onloadedmetadata = () => {
+                    snapBtn.disabled = false;
+                };
+            } catch (err2) {
+                statusArea.innerHTML = `<div class="status-message error-message">Could not access webcam: ${err2.message}</div>`;
+                snapBtn.disabled = true;
+                return;
+            }
+        }
+    }
+
+    snapBtn.addEventListener('click', () => {
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+            statusArea.innerHTML = '<div class="status-message error-message">Video stream not ready. Please try again.</div>';
+            return;
+        }
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL("image/jpeg");
+        console.log('Captured image (first 50 chars):', dataURL.substring(0, 50));
+        if (dataURL.startsWith("data:image/jpeg;base64,")) {
+            capturedField.value = dataURL;
+            preview.src = dataURL;
+            preview.style.display = 'block';
+            video.style.display = 'none';
+            snapBtn.style.display = "none";
+            retakeBtn.style.display = "inline-block";
+            submitBtn.style.display = "inline-block";
+            submitBtn.disabled = false;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+        } else {
+            statusArea.innerHTML = '<div class="status-message error-message">Failed to capture valid image</div>';
+        }
+    });
+
+    retakeBtn.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        capturedField.value = "";
+        preview.src = '';
+        preview.style.display = 'none';
+        video.style.display = 'block';
+        snapBtn.style.display = "inline-block";
+        retakeBtn.style.display = "none";
+        submitBtn.style.display = "none";
+        submitBtn.disabled = false;
+        statusArea.innerHTML = '';
+        setupCamera();
+    });
+
+    loginForm.addEventListener('submit', async (event) => {
+        const username = document.getElementById('username').value.trim();
+        if (!username) {
+            event.preventDefault();
+            statusArea.innerHTML = '<div class="status-message error-message">Please enter a username</div>';
+            return;
+        }
+        if (!capturedField.value) {
+            event.preventDefault();
+            statusArea.innerHTML = '<div class="status-message error-message">Please capture an image</div>';
+            return;
+        }
+        event.preventDefault();
+        statusArea.innerHTML = '<div class="status-message">Processing...</div>';
+        submitBtn.disabled = true;
+        const formData = new FormData(loginForm);
+        console.log('Form data:', [...formData.entries()]);
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+            let result;
+            try {
+                result = await response.json();
+            } catch (e) {
+                console.error('Raw response:', await response.text());
+                throw new Error('Invalid JSON response');
+            }
+            console.log('Response JSON:', result);
+            if (response.ok) {
+                const message = result.message || 'Login successful';
+                statusArea.innerHTML = `<div class="status-message">${message}</div>`;
+                submitBtn.disabled = false;
+                retakeBtn.style.display = 'inline-block';
+                snapBtn.style.display = 'inline-block';
+                setTimeout(() => {
+                    window.location.href = '/success?message=' + encodeURIComponent(message);
+                }, 2000);
+            } else {
+                const error = result.detail || result.error || 'Login failed';
+                statusArea.innerHTML = `<div class="status-message error-message">${error}</div>`;
+                submitBtn.disabled = false;
+                retakeBtn.style.display = 'inline-block';
+                snapBtn.style.display = 'inline-block';
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            statusArea.innerHTML = `<div class="status-message error-message">Network error: ${error.message}</div>`;
+            submitBtn.disabled = false;
+            retakeBtn.style.display = 'inline-block';
+            snapBtn.style.display = 'inline-block';
+        }
+    });
+
+    setupCamera();
+</script>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Success{% endblock %}
+{% block content %}
+<section class="success-section">
+    <div class="success-content">
+        <h2>Success</h2>
+        <p>{{ message }}</p>
+        <div class="success-links">
+            <a href="/login">Back to Login</a>
+            <a href="/register">Back to Register</a>
+            <a href="/users">View Users</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

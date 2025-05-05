@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="navbar-brand">Face Recognition System</a>
+            <div class="navbar-links">
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+                <a href="/users">Users</a>
+            </div>
+        </div>
+    </nav>
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="footer-section">
+        <div class="footer-content">
+            <p>© 2025 Face Recognition Attendance System. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+                <a href="/users">View Users</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
